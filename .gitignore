@@ -134,3 +134,81 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Node.js general
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor temporales
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+logs
+*.log
+*.log.*
+
+# Compilación frontend (React, Next.js)
+build/
+dist/
+.next/
+out/
+
+# AWS SAM / Serverless
+.aws-sam/
+.serverless/
+.cache/
+.sls-next/
+
+# CloudFormation
+cdk.out/
+
+# Coverage & Testing
+coverage/
+nyc_output/
+*.lcov
+
+# AWS credentials (nunca subas estas)
+.aws/credentials
+.aws/config
+
+# DevOps artifacts
+*.zip
+*.tar.gz
+*.tmp
+
+# Exported files
+*.csv
+*.xlsx
+*.bak
+*.sqlite
+
+# Python (si usas scripts)
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Docker
+*.dockerfile
+docker-compose.override.yml
+.dockerignore
+
+# Terraform (si usas IaC con esto)
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+
+# Misc
+*.pem
+*.crt
+*.key
