@@ -24,6 +24,7 @@ provider:
         - dynamodb:Scan
       Resource: arn:aws:dynamodb:us-east-1:*:table/Clases
 
+# CRUD de las clases #
 functions:
   getClases:
     handler: handler.getClases
@@ -49,6 +50,15 @@ functions:
           method: post
           cors: true
 
+  eliminarClase:
+    handler: handler.eliminarClase
+    events:
+      - http:
+          path: clases/{id}
+          method: delete
+          cors: true
+
+# Creacion de Tabla #
 resources:
   Resources:
     ClasesTable:

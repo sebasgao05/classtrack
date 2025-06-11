@@ -49,7 +49,7 @@ module.exports.crearClase = async (event) => {
     }
 };
 
-    module.exports.getClases = async () => {
+module.exports.getClases = async () => {
     try {
         const params = {
         TableName: TABLE_NAME,
@@ -76,10 +76,9 @@ module.exports.crearClase = async (event) => {
         body: JSON.stringify({ mensaje: "Error al obtener clases" }),
         };
     }
-    };
+};
 
-    // Obtener clase por ID
-    module.exports.getClaseById = async (event) => {
+module.exports.getClaseById = async (event) => {
     try {
         const id = event.pathParameters.id;
 
@@ -119,5 +118,37 @@ module.exports.crearClase = async (event) => {
         },
         body: JSON.stringify({ mensaje: "Error al obtener clase por ID" }),
         };
+    }
+};
+
+module.exports.eliminarClase = async (event) => {
+    const id = event.pathParameters.id;
+
+    const params = {
+    TableName: "Clases",
+    Key: { id },
+    };
+
+    try {
+    await dynamoDb.delete(params).promise();
+
+    return {
+        statusCode: 200,
+        headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mensaje: "Clase eliminada" }),
+    };
+    } catch (error) {
+    console.error("Error al eliminar clase:", error);
+    return {
+        statusCode: 500,
+        headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mensaje: "Error al eliminar clase" }),
+    };
     }
 };
