@@ -1,116 +1,123 @@
-"use strict";
-
+const { v4: uuidv4 } = require("uuid");
 const AWS = require("aws-sdk");
-const dynamo = new AWS.DynamoDB.DocumentClient();
 
-module.exports.getClases = async () => {
-    return {
-        statusCode: 200,
-        body: JSON.stringify(clasesMock),
-    };
-};
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const TABLE_NAME = "Clases";
 
-module.exports.getClaseById = async (event) => {
-    const { id } = event.pathParameters;
-    const clase = clasesMock.find(c => c.id === id);
+module.exports.crearClase = async (event) => {
+    try {
+        const datos = JSON.parse(event.body);
 
-    if (!clase) {
+        const nuevaClase = {
+            id: uuidv4(),
+            titulo: datos.titulo,
+            descripcion: datos.descripcion,
+            tecnologias: datos.tecnologias,
+            enlaceMeetup: datos.enlaceMeetup,
+        };
+
+        const params = {
+            TableName: TABLE_NAME,
+            Item: nuevaClase,
+        };
+
+        await dynamoDb.put(params).promise();
+
         return {
-        statusCode: 404,
-        body: JSON.stringify({ mensaje: "Clase no encontrada" })
+            statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                mensaje: "Clase creada",
+                clase: nuevaClase,
+            }),
+        };
+    } catch (error) {
+        console.error("Error al crear clase:", error);
+        return {
+            statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ mensaje: "Error al crear clase" }),
         };
     }
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify(clase)
-    };
 };
 
-module.exports.crearClase = async (event) => {
-    const body = JSON.parse(event.body);
-
-    const nuevaClase = {
-        id: Date.now().toString(),
-        titulo: body.titulo,
-        descripcion: body.descripcion,
-        tecnologias: body.tecnologias,
-        enlaceMeetup: body.enlaceMeetup
-    };
-
-    console.log("Clase recibida:", nuevaClase);
-
-    return {
-        statusCode: 201,
-        body: JSON.stringify({
-        mensaje: "Clase creada exitosamente",
-        clase: nuevaClase
-        })
-    };
-};
-
-module.exports.crearClase = async (event) => {
-    const datos = JSON.parse(event.body);
-    const id = Date.now().toString();
-
-    const nuevaClase = {
-        id,
-        ...datos
-    };
-
-    await dynamo.put({
-        TableName: "Clases",
-        Item: nuevaClase
-    }).promise();
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ mensaje: "Clase creada", clase: nuevaClase })
-    };
-};
-
-module.exports.getClases = async () => {
+    module.exports.getClases = async () => {
     try {
-        const resultado = await dynamo.scan({ TableName: "Clases" }).promise();
+        const params = {
+        TableName: TABLE_NAME,
+        };
+
+        const resultado = await dynamoDb.scan(params).promise();
 
         return {
         statusCode: 200,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+        },
         body: JSON.stringify(resultado.Items),
         };
     } catch (error) {
         console.error("Error al obtener clases:", error);
         return {
         statusCode: 500,
-        body: JSON.stringify({ error: "Error al obtener las clases" }),
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mensaje: "Error al obtener clases" }),
         };
     }
-};
+    };
 
-module.exports.getClaseById = async (event) => {
-    const { id } = event.pathParameters;
-
+    // Obtener clase por ID
+    module.exports.getClaseById = async (event) => {
     try {
-        const resultado = await dynamo.get({
-        TableName: "Clases",
-        Key: { id }
-        }).promise();
+        const id = event.pathParameters.id;
+
+        const params = {
+        TableName: TABLE_NAME,
+        Key: { id },
+        };
+
+        const resultado = await dynamoDb.get(params).promise();
 
         if (!resultado.Item) {
         return {
             statusCode: 404,
-            body: JSON.stringify({ error: "Clase no encontrada" }),
+            headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ mensaje: "Clase no encontrada" }),
         };
         }
 
         return {
         statusCode: 200,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+        },
         body: JSON.stringify(resultado.Item),
         };
     } catch (error) {
-        console.error("Error al obtener la clase:", error);
+        console.error("Error al obtener clase por ID:", error);
         return {
         statusCode: 500,
-        body: JSON.stringify({ error: "Error al obtener la clase" }),
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mensaje: "Error al obtener clase por ID" }),
         };
     }
 };
