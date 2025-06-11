@@ -13,7 +13,10 @@ const AdminPanel = () => {
         const nuevaClase = {
         titulo,
         descripcion,
-        tecnologias: tecnologias.split(",").map(t => t.trim()),
+        tecnologias: tecnologias
+            .split(",")
+            .map((t) => t.trim())
+            .filter((t) => t.length > 0),
         enlaceMeetup
         };
 
