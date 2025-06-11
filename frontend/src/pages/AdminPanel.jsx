@@ -18,21 +18,18 @@ const AdminPanel = () => {
         };
 
         try {
-        const response = await axios.post(
-            "https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases", 
+            const respuesta = await axios.post(
+            "https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases",
             nuevaClase
-        );
-        console.log("Clase creada:", response.data.clase);
-        alert("Clase creada exitosamente ✅");
+            );
+            console.log("Clase creada:", respuesta.data);
 
-        // Limpia el formulario
-        setTitulo("");
-        setDescripcion("");
-        setTecnologias("");
-        setEnlaceMeetup("");
+            alert("Clase creada exitosamente ✅");
+
+            setNuevaClase({ titulo: "", descripcion: "", tecnologias: "", enlaceMeetup: "" });
         } catch (error) {
-        console.error("Error al crear la clase:", error);
-        alert("Ocurrió un error al enviar la clase ❌");
+            console.error("Error al crear la clase:", error);
+            alert("Ocurrió un error al enviar la clase ❌");
         }
     };
 

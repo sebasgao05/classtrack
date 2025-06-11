@@ -11,7 +11,7 @@ function ClaseDetalle() {
     const obtenerClase = async () => {
         try {
             const response = await axios.get(
-            `https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases/${id}` // ← Reemplaza por tu URL real
+            `https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases/${id}` 
             );
             setClase(response.data);
         } catch (error) {
