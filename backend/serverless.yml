@@ -1,0 +1,15 @@
+service: classtrack-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+
+functions:
+  getClases:
+    handler: handler.getClases
+    events:
+      - http:
+          path: clases
+          method: get
+          cors: true
