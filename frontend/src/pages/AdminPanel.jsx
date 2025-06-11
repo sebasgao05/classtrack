@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const AdminPanel = () => {
-    const [titulo, setTitulo] = useState("1");
-    const [descripcion, setDescripcion] = useState("1");
-    const [tecnologias, setTecnologias] = useState("1");
-    const [enlaceMeetup, setEnlaceMeetup] = useState(" http://192.168.0.7:3000");
+    const [titulo, setTitulo] = useState("");
+    const [descripcion, setDescripcion] = useState("");
+    const [tecnologias, setTecnologias] = useState("");
+    const [enlaceMeetup, setEnlaceMeetup] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,7 +19,7 @@ const AdminPanel = () => {
 
         try {
         const response = await axios.post(
-            "https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/", 
+            "https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases", 
             nuevaClase
         );
         console.log("Clase creada:", response.data.clase);
