@@ -13,3 +13,11 @@ functions:
           path: clases
           method: get
           cors: true
+
+  getClaseById:
+    handler: handler.getClaseById
+    events:
+      - http:
+          path: clases/{id}
+          method: get
+          cors: true

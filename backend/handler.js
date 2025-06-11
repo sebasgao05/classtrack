@@ -4,7 +4,7 @@ const clasesMock = [
     {
         id: "1",
         titulo: "Introducción a AWS Lambda",
-        descripcion: "Clases simuladas desde Lambda",
+        descripcion: "Clase simulada desde Lambda",
         tecnologias: ["AWS Lambda", "API Gateway"],
         enlaceMeetup: "https://meetup.com/evento1"
     },
@@ -21,5 +21,22 @@ const clasesMock = [
     return {
         statusCode: 200,
         body: JSON.stringify(clasesMock),
+    };
+    };
+
+    module.exports.getClaseById = async (event) => {
+    const { id } = event.pathParameters;
+    const clase = clasesMock.find(c => c.id === id);
+
+    if (!clase) {
+        return {
+        statusCode: 404,
+        body: JSON.stringify({ mensaje: "Clase no encontrada" })
+        };
+    }
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify(clase)
     };
 };

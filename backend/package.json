@@ -2,10 +2,6 @@
     "name": "classtrack-backend",
     "version": "1.0.0",
     "description": "Backend del proyecto ClassTrack usando Serverless Framework",
-    "main": "handler.js",
-    "scripts": {
-        "start": "sls offline start"
-    },
-    "dependencies": {},
-    "devDependencies": {}
+    "main": "handler.js", 
+    "license": "MIT"
 }
