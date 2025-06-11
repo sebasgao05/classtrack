@@ -1,25 +1,40 @@
-import React from "react";
-import { useParams, Link } from "react-router-dom";
-import clasesMock from "../services/clasesMock";
+import React, { useEffect, useState } from "react";
+import { useParams} from "react-router-dom";
+import axios from "axios";
 
 function ClaseDetalle() {
     const { id } = useParams();
-    const clase = clasesMock.find((c) => c.id === id);
+    const [clase, setClase] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    if (!clase) {
-        return <h2>Clase no encontrada</h2>;
-    }
+    useEffect(() => {
+    const obtenerClase = async () => {
+        try {
+            const response = await axios.get(
+            `https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases/${id}` // ← Reemplaza por tu URL real
+            );
+            setClase(response.data);
+        } catch (error) {
+            console.error("Error al obtener los detalles de la clase:", error);
+        } finally {
+            setLoading(false);
+        }
+        };
+
+        obtenerClase();
+    }, [id]);
+
+    if (loading) return <p style={{ padding: "2rem" }}>Cargando detalles...</p>;
+    if (!clase) return <p style={{ padding: "2rem" }}>Clase no encontrada.</p>;
 
     return (
-        <div>
-        <h1>{clase.titulo}</h1>
-        <p>{clase.descripcion}</p>
-        <p><strong>Tecnologías:</strong> {clase.tecnologias.join(", ")}</p>
-        <a href={clase.enlaceMeetup} target="_blank" rel="noreferrer">
-            Confirmar asistencia (Meetup)
-        </a>
-        <br /><br />
-        <Link to="/clases">← Volver a la lista de clases</Link>
+        <div style={{ padding: "2rem" }}>
+            <h2>{clase.titulo}</h2>
+            <p>{clase.descripcion}</p>
+            <p><strong>Tecnologías:</strong> {clase.tecnologias.join(", ")}</p>
+            <a href={clase.enlaceMeetup} target="_blank" rel="noopener noreferrer">
+                Confirmar asistencia en Meetup
+            </a>
         </div>
     );
 }

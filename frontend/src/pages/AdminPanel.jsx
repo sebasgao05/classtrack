@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const AdminPanel = () => {
-    const [titulo, setTitulo] = useState("");
-    const [descripcion, setDescripcion] = useState("");
-    const [tecnologias, setTecnologias] = useState("");
-    const [enlaceMeetup, setEnlaceMeetup] = useState("");
+    const [titulo, setTitulo] = useState("1");
+    const [descripcion, setDescripcion] = useState("1");
+    const [tecnologias, setTecnologias] = useState("1");
+    const [enlaceMeetup, setEnlaceMeetup] = useState(" http://192.168.0.7:3000");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
