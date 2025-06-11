@@ -4,37 +4,43 @@ import axios from "axios";
 
 const Clases = () => {
     const [clases, setClases] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const obtenerClases = async () => {
         try {
-            const response = await axios.get("https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases");
-            setClases(response.data);
-        } catch (error) {
-            console.error("Error al obtener las clases:", error);
+            const respuesta = await axios.get(
+            "https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases"
+            );
+            setClases(respuesta.data);
+        } catch (err) {
+            console.error("Error al obtener las clases:", err);
+            setError("No se pudieron cargar las clases.");
         } finally {
-            setLoading(false);
+            setCargando(false);
         }
         };
 
-        obtenerClases();
+    obtenerClases();
     }, []);
 
+    if (cargando) return <p>Cargando clases...</p>;
+    if (error) return <p>{error}</p>;
+
     return (
-        <div style={{ padding: "2rem" }}>
+        <div>
         <h2>Lista de Clases</h2>
-        {loading ? (
-            <p>Cargando clases...</p>
-        ) : clases.length === 0 ? (
+        {clases.length === 0 ? (
             <p>No hay clases disponibles.</p>
         ) : (
             <ul>
             {clases.map((clase) => (
-                <li key={clase.id} style={{ marginBottom: "1rem" }}>
+                <li key={clase.id}>
                 <h3>{clase.titulo}</h3>
                 <p>{clase.descripcion}</p>
-                <p><strong>Tecnologías:</strong> {clase.tecnologias.join(", ")}</p>
+                <strong>Tecnologías:</strong> {clase.tecnologias.join(", ")}
+                <br />
                 <Link to={`/clase/${clase.id}`}>Ver detalles</Link>
                 </li>
             ))}
