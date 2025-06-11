@@ -19,14 +19,21 @@ const AdminPanel = () => {
 
         try {
             const respuesta = await axios.post(
-            "https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases",
-            nuevaClase
+                "https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/clases",
+                nuevaClase
             );
-            console.log("Clase creada:", respuesta.data);
+            console.log("Clase creada:", respuesta);
 
-            alert("Clase creada exitosamente ✅");
+            if (respuesta.status === 200) {
+                alert("Clase creada exitosamente ✅");
 
-            setNuevaClase({ titulo: "", descripcion: "", tecnologias: "", enlaceMeetup: "" });
+                setTitulo("");
+                setDescripcion("");
+                setTecnologias("");
+                setEnlaceMeetup("");
+            } else {
+                alert ("Respuesta no esperada del servidor ❌");
+            }
         } catch (error) {
             console.error("Error al crear la clase:", error);
             alert("Ocurrió un error al enviar la clase ❌");
@@ -38,39 +45,39 @@ const AdminPanel = () => {
         <h2>Panel de Administración</h2>
         <form onSubmit={handleSubmit}>
             <div>
-            <label>Título:</label><br />
-            <input
-                type="text"
-                value={titulo}
-                onChange={(e) => setTitulo(e.target.value)}
-                required
-            />
+                <label>Título:</label><br />
+                    <input
+                        type="text"
+                        value={titulo}
+                        onChange={(e) => setTitulo(e.target.value)}
+                        required
+                    />
             </div>
             <div>
-            <label>Descripción:</label><br />
-            <textarea
-                value={descripcion}
-                onChange={(e) => setDescripcion(e.target.value)}
-                required
-            />
+                <label>Descripción:</label><br />
+                <textarea
+                    value={descripcion}
+                    onChange={(e) => setDescripcion(e.target.value)}
+                    required
+                />
             </div>
             <div>
-            <label>Tecnologías (separadas por coma):</label><br />
-            <input
-                type="text"
-                value={tecnologias}
-                onChange={(e) => setTecnologias(e.target.value)}
-                required
-            />
+                <label>Tecnologías (separadas por coma):</label><br />
+                <input
+                    type="text"
+                    value={tecnologias}
+                    onChange={(e) => setTecnologias(e.target.value)}
+                    required
+                />
             </div>
             <div>
-            <label>Enlace de Meetup:</label><br />
-            <input
-                type="url"
-                value={enlaceMeetup}
-                onChange={(e) => setEnlaceMeetup(e.target.value)}
-                required
-            />
+                <label>Enlace de Meetup:</label><br />
+                <input
+                    type="url"
+                    value={enlaceMeetup}
+                    onChange={(e) => setEnlaceMeetup(e.target.value)}
+                    required
+                />
             </div>
             <br />
             <button type="submit">Crear Clase</button>
