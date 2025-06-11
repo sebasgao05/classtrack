@@ -1,69 +1,85 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-function AdminPanel() {
-    const [clase, setClase] = useState({
-        titulo: "",
-        descripcion: "",
-        tecnologias: "",
-        enlaceMeetup: ""
-    });
+const AdminPanel = () => {
+    const [titulo, setTitulo] = useState("");
+    const [descripcion, setDescripcion] = useState("");
+    const [tecnologias, setTecnologias] = useState("");
+    const [enlaceMeetup, setEnlaceMeetup] = useState("");
 
-    const [clasesCreadas, setClasesCreadas] = useState([]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setClase((prev) => ({
-        ...prev,
-        [name]: value
-        }));
-    };
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         const nuevaClase = {
-        ...clase,
-        id: Date.now().toString(),
-        tecnologias: clase.tecnologias.split(",").map(t => t.trim())
+        titulo,
+        descripcion,
+        tecnologias: tecnologias.split(",").map(t => t.trim()),
+        enlaceMeetup
         };
-        setClasesCreadas((prev) => [...prev, nuevaClase]);
-        setClase({ titulo: "", descripcion: "", tecnologias: "", enlaceMeetup: "" });
+
+        try {
+        const response = await axios.post(
+            "https://7sfofp87oh.execute-api.us-east-1.amazonaws.com/dev/", 
+            nuevaClase
+        );
+        console.log("Clase creada:", response.data.clase);
+        alert("Clase creada exitosamente ✅");
+
+        // Limpia el formulario
+        setTitulo("");
+        setDescripcion("");
+        setTecnologias("");
+        setEnlaceMeetup("");
+        } catch (error) {
+        console.error("Error al crear la clase:", error);
+        alert("Ocurrió un error al enviar la clase ❌");
+        }
     };
 
     return (
-        <div>
-        <h1>Panel de Administración</h1>
-        <form onSubmit={handleSubmit} style={{ marginBottom: "30px" }}>
+        <div style={{ padding: "2rem" }}>
+        <h2>Panel de Administración</h2>
+        <form onSubmit={handleSubmit}>
             <div>
             <label>Título:</label><br />
-            <input type="text" name="titulo" value={clase.titulo} onChange={handleChange} required />
+            <input
+                type="text"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                required
+            />
             </div>
             <div>
             <label>Descripción:</label><br />
-            <textarea name="descripcion" value={clase.descripcion} onChange={handleChange} required />
+            <textarea
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                required
+            />
             </div>
             <div>
             <label>Tecnologías (separadas por coma):</label><br />
-            <input type="text" name="tecnologias" value={clase.tecnologias} onChange={handleChange} required />
+            <input
+                type="text"
+                value={tecnologias}
+                onChange={(e) => setTecnologias(e.target.value)}
+                required
+            />
             </div>
             <div>
             <label>Enlace de Meetup:</label><br />
-            <input type="url" name="enlaceMeetup" value={clase.enlaceMeetup} onChange={handleChange} required />
+            <input
+                type="url"
+                value={enlaceMeetup}
+                onChange={(e) => setEnlaceMeetup(e.target.value)}
+                required
+            />
             </div>
-            <button type="submit" style={{ marginTop: "10px" }}>Crear clase</button>
+            <br />
+            <button type="submit">Crear Clase</button>
         </form>
-
-        <h2>Clases creadas</h2>
-        <ul>
-            {clasesCreadas.map((c) => (
-            <li key={c.id} style={{ marginBottom: "10px" }}>
-                <strong>{c.titulo}</strong> – {c.descripcion}  
-                <br /> Tecnologías: {c.tecnologias.join(", ")}  
-                <br /> <a href={c.enlaceMeetup} target="_blank" rel="noreferrer">Meetup</a>
-            </li>
-            ))}
-        </ul>
         </div>
     );
-    }
+};
 
-    export default AdminPanel;
+export default AdminPanel;
