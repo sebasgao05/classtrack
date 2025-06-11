@@ -1,21 +1,7 @@
 "use strict";
 
-const clasesMock = [
-    {
-        id: "1",
-        titulo: "Introducción a AWS Lambda",
-        descripcion: "Clase simulada desde Lambda",
-        tecnologias: ["AWS Lambda", "API Gateway"],
-        enlaceMeetup: "https://meetup.com/evento1"
-    },
-    {
-        id: "2",
-        titulo: "Bases de datos con DynamoDB",
-        descripcion: "Otra clase interesante",
-        tecnologias: ["DynamoDB", "AWS SDK"],
-        enlaceMeetup: "https://meetup.com/evento2"
-    }
-    ];
+const AWS = require("aws-sdk");
+const dynamo = new AWS.DynamoDB.DocumentClient();
 
 module.exports.getClases = async () => {
     return {
@@ -61,4 +47,70 @@ module.exports.crearClase = async (event) => {
         clase: nuevaClase
         })
     };
+};
+
+module.exports.crearClase = async (event) => {
+    const datos = JSON.parse(event.body);
+    const id = Date.now().toString();
+
+    const nuevaClase = {
+        id,
+        ...datos
+    };
+
+    await dynamo.put({
+        TableName: "Clases",
+        Item: nuevaClase
+    }).promise();
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify({ mensaje: "Clase creada", clase: nuevaClase })
+    };
+};
+
+module.exports.getClases = async () => {
+    try {
+        const resultado = await dynamo.scan({ TableName: "Clases" }).promise();
+
+        return {
+        statusCode: 200,
+        body: JSON.stringify(resultado.Items),
+        };
+    } catch (error) {
+        console.error("Error al obtener clases:", error);
+        return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Error al obtener las clases" }),
+        };
+    }
+};
+
+module.exports.getClaseById = async (event) => {
+    const { id } = event.pathParameters;
+
+    try {
+        const resultado = await dynamo.get({
+        TableName: "Clases",
+        Key: { id }
+        }).promise();
+
+        if (!resultado.Item) {
+        return {
+            statusCode: 404,
+            body: JSON.stringify({ error: "Clase no encontrada" }),
+        };
+        }
+
+        return {
+        statusCode: 200,
+        body: JSON.stringify(resultado.Item),
+        };
+    } catch (error) {
+        console.error("Error al obtener la clase:", error);
+        return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Error al obtener la clase" }),
+        };
+    }
 };

@@ -4,6 +4,7 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: us-east-1
+
   httpApi:
     cors:
       allowedOrigins:
@@ -14,6 +15,14 @@ provider:
         - GET
         - POST
         - OPTIONS
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:Scan
+      Resource: arn:aws:dynamodb:us-east-1:*:table/Clases
 
 functions:
   getClases:
@@ -39,3 +48,17 @@ functions:
           path: clases
           method: post
           cors: true
+
+resources:
+  Resources:
+    ClasesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Clases
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
