@@ -22,6 +22,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:GetItem
         - dynamodb:Scan
+        - dynamodb:DeleteItem
       Resource: arn:aws:dynamodb:us-east-1:*:table/Clases
 
 # CRUD de las clases #
