@@ -21,3 +21,11 @@ functions:
           path: clases/{id}
           method: get
           cors: true
+
+  crearClase:
+    handler: handler.crearClase
+    events:
+      - http:
+          path: clases
+          method: post
+          cors: true

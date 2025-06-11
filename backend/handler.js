@@ -17,14 +17,14 @@ const clasesMock = [
     }
     ];
 
-    module.exports.getClases = async () => {
+module.exports.getClases = async () => {
     return {
         statusCode: 200,
         body: JSON.stringify(clasesMock),
     };
-    };
+};
 
-    module.exports.getClaseById = async (event) => {
+module.exports.getClaseById = async (event) => {
     const { id } = event.pathParameters;
     const clase = clasesMock.find(c => c.id === id);
 
@@ -38,5 +38,27 @@ const clasesMock = [
     return {
         statusCode: 200,
         body: JSON.stringify(clase)
+    };
+};
+
+module.exports.crearClase = async (event) => {
+    const body = JSON.parse(event.body);
+
+    const nuevaClase = {
+        id: Date.now().toString(),
+        titulo: body.titulo,
+        descripcion: body.descripcion,
+        tecnologias: body.tecnologias,
+        enlaceMeetup: body.enlaceMeetup
+    };
+
+    console.log("Clase recibida:", nuevaClase);
+
+    return {
+        statusCode: 201,
+        body: JSON.stringify({
+        mensaje: "Clase creada exitosamente",
+        clase: nuevaClase
+        })
     };
 };
