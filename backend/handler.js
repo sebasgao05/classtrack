@@ -124,6 +124,8 @@ module.exports.getClaseById = async (event) => {
 module.exports.eliminarClase = async (event) => {
     const id = event.pathParameters.id;
 
+    console.log("Eliminando clase con ID:", id);
+
     const params = {
     TableName: "Clases",
     Key: { id },
