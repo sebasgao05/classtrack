@@ -37,11 +37,12 @@ const Clases = () => {
             <ul>
             {clases.map((clase) => (
                 <li key={clase.id}>
-                <h3>{clase.titulo}</h3>
-                <p>{clase.descripcion}</p>
-                <strong>Tecnologías:</strong> {clase.tecnologias.join(", ")}
-                <br />
-                <Link to={`/clase/${clase.id}`}>Ver detalles</Link>
+                    <h3>{clase.titulo}</h3>
+                    <p>{clase.descripcion}</p>
+                    <strong>Tecnologías:</strong> {clase.tecnologias.join(", ")}
+                    <p><strong>📅 Fecha:</strong> {clase.fecha}</p>
+                    <br />
+                    <Link to={`/clase/${clase.id}`}>Ver detalles</Link>
                 </li>
             ))}
             </ul>
