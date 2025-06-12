@@ -154,3 +154,38 @@ module.exports.eliminarClase = async (event) => {
     };
     }
 };
+
+module.exports.actualizarClase = async (event) => {
+    const id = event.pathParameters.id;
+    const datos = JSON.parse(event.body);
+
+    const params = {
+        TableName: "Clases",
+        Key: { id },
+        UpdateExpression: "set titulo = :t, descripcion = :d, tecnologias = :tec, enlaceMeetup = :e, fecha = :f, hora = :h, lugar = :l",
+        ExpressionAttributeValues: {
+        ":t": datos.titulo,
+        ":d": datos.descripcion,
+        ":tec": datos.tecnologias,
+        ":e": datos.enlaceMeetup,
+        ":f": datos.fecha,
+        ":h": datos.hora,
+        ":l": datos.lugar,
+        },
+        ReturnValues: "ALL_NEW",
+    };
+
+    try {
+        const result = await dynamoDb.update(params).promise();
+        return {
+        statusCode: 200,
+        body: JSON.stringify(result.Attributes),
+        };
+    } catch (error) {
+        console.error("Error al actualizar clase:", error);
+        return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Error al actualizar la clase" }),
+        };
+    }
+};
