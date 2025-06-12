@@ -14,6 +14,9 @@ module.exports.crearClase = async (event) => {
             descripcion: datos.descripcion,
             tecnologias: datos.tecnologias,
             enlaceMeetup: datos.enlaceMeetup,
+            fecha: datos.fecha,
+            hora: datos.hora,
+            lugar: datos.lugar
         };
 
         const params = {
