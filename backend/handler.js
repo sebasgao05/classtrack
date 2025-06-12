@@ -20,7 +20,7 @@ module.exports.crearClase = async (event) => {
         };
 
         const params = {
-            TableName: TABLE_NAME,
+            TableName: "Clases",
             Item: nuevaClase,
         };
 
